@@ -1,11 +1,16 @@
 module.exports = class {
-  constructor(path='') {
+  constructor(path = "") {
     this.file = path;
   }
 
   fs = require("fs");
+  /**
+   * string
+   */
   file;
-
+  /**
+   * @param {string} f
+   */
   set file(f) {
     this.file = f;
   }
