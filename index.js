@@ -3,12 +3,16 @@ const { hideBin } = require("yargs/helpers");
 const HeadsOrNails = require("./game");
 const Logger = require("./logger");
 const game = new HeadsOrNails();
-let logger = new Logger();
+let logger;
 
 async function run() {
-  await game.start();
-  const { randomNumber, answer: userNumber } = game.resultRound;
-  await logger.write({ randomNumber, userNumber });
+  try {
+    await game.start();
+    const { randomNumber, answer: userNumber } = game.resultRound;
+    await logger.write({ randomNumber, userNumber });
+  } catch (error) {
+    throw error;
+  }
   run();
 }
 
@@ -25,8 +29,8 @@ yargs(hideBin(process.argv))
         })
         .example("$0 logs.log");
     },
-    handler({file}) {
-      logger.file = file;
+    handler({ file }) {
+      logger = new Logger(file);
       run().catch(console.error);
     },
   })
