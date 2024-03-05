@@ -1,6 +1,6 @@
 {
-  "name": "lucky-hot statistic",
-  "version": "1.0.0",
+  "name": "lucky-hot-statistic",
+  "version": "0.0.2",
   "description": "lucky-hot statistic analizator",
   "main": "index.js",
   "bin": {

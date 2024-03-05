@@ -1,34 +1,31 @@
 const yargs = require("yargs");
 const { hideBin } = require("yargs/helpers");
-const HeadsOrNails = require("./game");
-const Logger = require("./logger");
-const game = new HeadsOrNails();
-let logger = new Logger();
+const { statConsole } = require("./statConsole");
 
-async function run() {
-  await game.start();
-  const { randomNumber, answer: userNumber } = game.resultRound;
-  await logger.write({ randomNumber, userNumber });
-  run();
-}
 
 yargs(hideBin(process.argv))
-  .scriptName("hot")
+  .scriptName("hot-stat")
   .command({
-    command: "$0 [file]",
+    command: "$0 [path]",
     description: "Game 'Heads or Tails!(HoT)'",
     builder(yargs) {
       yargs
-        .positional("file", {
-          description: "файл для записи логов",
+        .positional("path", {
+          description: "путь до файла логов",
           type: "string",
         })
-        .example("$0 logs.log");
+        .example("$0 ./logs.log");
     },
-    handler({file}) {
-      logger.file = file;
-      run().catch(console.error);
+    async handler({ path }) {
+      const Statistic = require("./statistic");
+      const statistic = new Statistic(path);
+      try {
+        const stat = await statistic.getStat();
+        statConsole(stat);
+      } catch (e) {
+        throw e.message;
+      }
     },
   })
-  .demandOption("file", "Укажите файл для логов")
+  .demandOption("path", "Укажите путь для файла логов")
   .parse();
